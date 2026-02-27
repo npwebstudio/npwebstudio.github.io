@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NP Naturals – Pure. Natural. Powerful.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #5a9e1a;
+    --green-light: #7dc225;
+    --green-dark: #3d6e10;
+    --cream: #f7f3ec;
+    --kraft: #e8d9c0;
+    --brown: #8b6914;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(90,158,26,0.12);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.08); }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .logo-icon::before {
+    content: '🌿';
+    font-size: 18px;
+  }
+  .logo-text {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--green-dark);
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+  }
+  .logo-text span { display: block; font-size: 0.65rem; font-weight: 400; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .nav-links {
+    display: flex; gap: 36px; list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--text);
+    font-size: 0.88rem; font-weight: 500; letter-spacing: 0.3px;
+    position: relative; padding-bottom: 3px;
+    transition: color .25s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 2px; background: var(--green);
+    transition: width .3s;
+  }
+  .nav-links a:hover { color: var(--green); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    background: var(--green); color: var(--white) !important;
+    padding: 8px 22px; border-radius: 50px;
+    font-size: 0.85rem !important; font-weight: 600 !important;
+    transition: background .25s, transform .2s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: var(--green-dark) !important; transform: translateY(-1px); color: var(--white) !important; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
+
+  /* ── HERO ── */
+  #home {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f7e6 0%, #fdf9f3 50%, #edf5e1 100%);
+    display: flex; align-items: center;
+    padding: 100px 5% 60px;
+    position: relative; overflow: hidden;
+  }
+
+  #home::before {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(125,194,37,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  #home::after {
+    content: '';
+    position: absolute; bottom: -150px; left: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(90,158,26,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-content {
+    max-width: 580px;
+    animation: fadeUp .9s ease both;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(90,158,26,0.1); border: 1px solid rgba(90,158,26,0.25);
+    color: var(--green-dark); padding: 6px 16px; border-radius: 50px;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 1.2px;
+    text-transform: uppercase; margin-bottom: 24px;
+  }
+  .hero-badge::before { content: '✦'; font-size: 0.6rem; }
+
+  .hero-content h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 700; line-height: 1.1;
+    color: var(--text); margin-bottom: 20px;
+  }
+  .hero-content h1 em {
+    font-style: italic; color: var(--green);
+  }
+
+  .hero-content p {
+    font-size: 1.05rem; color: var(--text-muted);
+    line-height: 1.7; margin-bottom: 36px; max-width: 460px;
+  }
+
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--green); color: var(--white);
+    padding: 14px 32px; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 0.9rem;
+    letter-spacing: 0.3px; transition: all .25s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(90,158,26,0.3); }
+
+  .btn-secondary {
+    background: transparent; color: var(--text);
+    padding: 14px 32px; border-radius: 50px;
+    text-decoration: none; font-weight: 500; font-size: 0.9rem;
+    border: 1.5px solid rgba(0,0,0,0.15); transition: all .25s;
+  }
+  .btn-secondary:hover { border-color: var(--green); color: var(--green); }
+
+  .hero-visual {
+    flex: 1; display: flex; justify-content: center; align-items: center;
+    position: relative; min-height: 420px;
+    animation: fadeIn 1.2s ease .3s both;
+  }
+
+  .hero-card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    max-width: 320px; text-align: center;
+    position: relative; z-index: 2;
+  }
+  .hero-card-emoji { font-size: 5rem; margin-bottom: 16px; display: block; }
+  .hero-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .hero-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+  .hero-card-tag { display: inline-block; background: var(--green); color: white; font-size: 0.72rem; font-weight: 600; padding: 4px 12px; border-radius: 50px; margin-bottom: 16px; letter-spacing: 0.5px; }
+
+  .float-chip {
+    position: absolute; background: white;
+    border-radius: 50px; padding: 10px 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.8rem; font-weight: 600; color: var(--text);
+    animation: float 3s ease-in-out infinite;
+  }
+  .float-chip:nth-child(2) { top: 30px; right: 0; animation-delay: .5s; }
+  .float-chip:nth-child(3) { bottom: 60px; left: 0; animation-delay: 1s; }
+  .float-chip:nth-child(4) { top: 50%; right: -20px; animation-delay: 1.5s; }
+  .chip-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+
+  /* ── STATS ── */
+  .stats {
+    background: var(--green);
+    padding: 40px 5%;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 24px; text-align: center;
+  }
+  .stat h3 { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 700; color: white; margin-bottom: 4px; }
+  .stat p { font-size: 0.82rem; color: rgba(255,255,255,0.8); letter-spacing: 0.5px; font-weight: 500; }
+
+  /* ── SECTION BASE ── */
+  section { padding: 90px 5%; }
+
+  .section-label {
+    display: inline-block; color: var(--green);
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 700; line-height: 1.2;
+    margin-bottom: 16px; color: var(--text);
+  }
+  .section-sub { font-size: 1rem; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 56px; }
+
+  /* ── PRODUCTS ── */
+  #products { background: var(--cream); }
+
+  .products-header { text-align: center; }
+  .products-header .section-sub { margin: 0 auto 56px; }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+  }
+
+  .product-card {
+    background: white; border-radius: 20px;
+    overflow: hidden; transition: transform .3s, box-shadow .3s;
+    cursor: pointer; position: relative;
+  }
+  .product-card:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(0,0,0,0.12); }
+
+  .product-img {
+    height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    font-size: 6rem;
+  }
+  .product-img-kraft { background: linear-gradient(135deg, #f0e6d3 0%, #e8d9c0 100%); }
+  .product-img-white { background: linear-gradient(135deg, #f0f7e6 0%, #e8f4d0 100%); }
+  .product-img-green { background: linear-gradient(135deg, #d4edaf 0%, #b8e070 100%); }
+
+  .product-bag {
+    width: 110px; height: 145px;
+    border-radius: 8px 8px 14px 14px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; box-shadow: 4px 8px 24px rgba(0,0,0,0.15);
+    padding: 12px 10px;
+  }
+  .bag-kraft { background: linear-gradient(160deg, #e0c99a 0%, #c9a96e 100%); }
+  .bag-white { background: linear-gradient(160deg, #f8f8f8 0%, #e8e8e8 100%); }
+  .bag-green { background: linear-gradient(160deg, #6fc223 0%, #4e9416 100%); }
+
+  .bag-top { width: 80px; height: 10px; background: rgba(0,0,0,0.1); border-radius: 4px; margin-bottom: 10px; }
+  .bag-label {
+    background: rgba(255,255,255,0.9);
+    border-radius: 6px; width: 85px; padding: 8px 6px;
+    text-align: center;
+  }
+  .bag-label.green-label { background: var(--green); }
+  .bag-label-brand { font-size: 0.52rem; font-weight: 700; color: var(--green-dark); letter-spacing: 0.5px; margin-bottom: 3px; }
+  .bag-label.green-label .bag-label-brand { color: white; }
+  .bag-label-name { font-size: 0.6rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .bag-label.green-label .bag-label-name { color: white; }
+  .bag-emoji { font-size: 1.4rem; margin-top: 6px; }
+
+  .product-badge {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--green); color: white;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.5px;
+    padding: 4px 10px; border-radius: 50px;
+  }
+
+  .product-info { padding: 24px; }
+  .product-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+  .product-info p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+  .product-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tag { font-size: 0.72rem; font-weight: 600; color: var(--green-dark); background: rgba(90,158,26,0.1); padding: 3px 10px; border-radius: 50px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-footer .price { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+  .btn-order {
+    background: var(--green); color: white;
+    border: none; padding: 9px 20px; border-radius: 50px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    transition: all .25s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-order:hover { background: var(--green-dark); transform: scale(1.04); }
+
+  /* ── WHY US ── */
+  #why { background: white; }
+
+  .why-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+  }
+
+  .why-text .section-sub { margin-bottom: 36px; }
+
+  .feature-list { display: flex; flex-direction: column; gap: 20px; }
+  .feature-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 16px; border-radius: 12px;
+    transition: background .2s;
+  }
+  .feature-item:hover { background: var(--cream); }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(90,158,26,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .feature-item h4 { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+  .feature-item p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+  .why-visual {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .why-card {
+    background: var(--cream); border-radius: 16px;
+    padding: 28px 20px; text-align: center;
+    transition: transform .3s;
+  }
+  .why-card:hover { transform: translateY(-4px); }
+  .why-card:first-child { grid-column: span 2; background: var(--green); color: white; }
+  .why-card:first-child h3, .why-card:first-child p { color: white !important; }
+  .why-card-emoji { font-size: 2.5rem; margin-bottom: 12px; }
+  .why-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+  .why-card p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── ABOUT ── */
+  #about { background: var(--cream); }
+
+  .about-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+  .about-main-card {
+    background: white; border-radius: 20px;
+    padding: 40px; box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .about-leaf { font-size: 5rem; margin-bottom: 20px; display: block; }
+  .about-main-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 16px; color: var(--green-dark); }
+  .about-main-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+  .about-tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .about-tag { font-size: 0.75rem; font-weight: 600; color: var(--green-dark); background: rgba(90,158,26,0.12); padding: 5px 14px; border-radius: 50px; }
+
+  .about-text .section-sub { margin-bottom: 28px; }
+  .about-text p { font-size: 0.92rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; }
+
+  .values-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+  .val-box { background: white; border-radius: 12px; padding: 16px; border-left: 3px solid var(--green); }
+  .val-box h5 { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; }
+  .val-box p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── CONTACT ── */
+  #contact { background: white; }
+
+  .contact-inner {
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 60px; align-items: start;
+  }
+
+  .contact-info .section-sub { margin-bottom: 36px; }
+
+  .contact-details { display: flex; flex-direction: column; gap: 20px; }
+  .contact-item { display: flex; gap: 16px; align-items: flex-start; }
+  .contact-icon { width: 44px; height: 44px; background: rgba(90,158,26,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .contact-item h5 { font-weight: 600; font-size: 0.88rem; margin-bottom: 3px; }
+  .contact-item p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
+  .contact-item a { color: var(--green); text-decoration: none; font-size: 0.83rem; font-weight: 500; }
+
+  .contact-form {
+    background: var(--cream); border-radius: 24px;
+    padding: 40px;
+  }
+  .contact-form h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 28px; color: var(--text); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: 0.3px; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 10px; background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; color: var(--text);
+    outline: none; transition: border-color .25s, box-shadow .25s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(90,158,26,0.12);
+  }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+
+  .btn-submit {
+    width: 100%; background: var(--green); color: white;
+    border: none; padding: 15px; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    transition: all .25s; letter-spacing: 0.3px;
+  }
+  .btn-submit:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(90,158,26,0.3); }
+
+  .form-success {
+    display: none; text-align: center; padding: 20px;
+    background: rgba(90,158,26,0.1); border-radius: 12px;
+    margin-top: 16px;
+  }
+  .form-success.show { display: block; animation: fadeUp .5s ease; }
+  .form-success p { color: var(--green-dark); font-weight: 600; font-size: 0.9rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #1a1a1a; color: rgba(255,255,255,0.7);
+    padding: 60px 5% 30px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 48px;
+  }
+  .footer-brand .logo-text { color: white; font-size: 1.1rem; margin-bottom: 14px; }
+  .footer-brand p { font-size: 0.83rem; line-height: 1.7; color: rgba(255,255,255,0.55); }
+  .footer-brand .social-row { display: flex; gap: 12px; margin-top: 20px; }
+  .social-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.08); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; font-size: 1rem; }
+  .social-icon:hover { background: var(--green); }
+  .footer-col h5 { color: white; font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.83rem; transition: color .2s; }
+  .footer-col a:hover { color: var(--green-light); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; }
+  .footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: white; padding: 20px 5%; border-bottom: 1px solid rgba(0,0,0,0.08); gap: 16px; }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    #home { flex-direction: column; text-align: center; padding-top: 120px; }
+    .hero-content p { margin: 0 auto 36px; }
+    .hero-btns { justify-content: center; }
+    .hero-visual { width: 100%; min-height: 300px; }
+    .float-chip { display: none; }
+    .why-grid, .about-inner, .contact-inner { grid-template-columns: 1fr; }
+    .why-visual { order: -1; grid-template-columns: 1fr 1fr; }
+    .why-card:first-child { grid-column: span 2; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 500px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .values-row { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    .why-visual { grid-template-columns: 1fr; }
+    .why-card:first-child { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#home" class="logo">
+    <div class="logo-icon"></div>
+    <div class="logo-text">NP NATURALS<span>Agricultural Products</span></div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Contact Us</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home" style="display:flex; gap:60px;">
+  <div class="hero-content">
+    <div class="hero-badge">Maharashtra-Based Manufacturer</div>
+    <h1>Premium Dehydrated Powders, <em>Pure & Natural</em></h1>
+    <p>NP Naturals by Nikhil Pagar — Maharashtra's trusted manufacturer of Dehydrated Onion Powder, Garlic Powder & Moringa Powder. 100% pure, no additives, fast delivery across Maharashtra.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-primary">Explore Products →</a>
+      <a href="#contact" class="btn-secondary">Get a Quote</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="float-chip" style="top:20px;right:20px;"><div class="chip-dot"></div>Grade A & Grade B</div>
+    <div class="float-chip" style="bottom:60px;left:0;animation-delay:.7s;"><div class="chip-dot"></div>Free 200g Sample</div>
+    <div class="float-chip" style="top:50%;right:-10px;animation-delay:1.4s;"><div class="chip-dot"></div>5kg / 10kg / 25kg Packs</div>
+    <div class="hero-card">
+      <div class="hero-card-tag">✦ Featured Product</div>
+      <span class="hero-card-emoji">🧅</span>
+      <h3>Dehydrated Onion Powder</h3>
+      <p>Pure, pungent, and perfectly dehydrated. Made from fresh onions — no fillers, no preservatives.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><h3>100%</h3><p>Pure — No Additives</p></div>
+  <div class="stat"><h3>3</h3><p>Premium Products</p></div>
+  <div class="stat"><h3>200g</h3><p>Free Sample Available</p></div>
+  <div class="stat"><h3>Fast</h3><p>Delivery Across Maharashtra</p></div>
+</div>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="products-header reveal">
+    <div class="section-label">Our Products</div>
+    <h2 class="section-title">Pure Natural Powders,<br>Straight from the Source</h2>
+    <p class="section-sub">Every product is sourced directly from trusted farms, dehydrated using clean processes, and packed to preserve natural flavour and nutrition.</p>
+    <div style="display:inline-flex;align-items:center;gap:12px;background:#fff7e6;border:1.5px solid #f0a500;border-radius:50px;padding:10px 24px;margin-bottom:20px;">
+      <span style="font-size:1.2rem;">🎁</span>
+      <span style="font-size:0.88rem;font-weight:600;color:#8b5e00;">Free 200g Sample Available — Contact us to claim yours!</span>
+      <a href="#contact" style="background:#f0a500;color:white;padding:6px 16px;border-radius:50px;font-size:0.78rem;font-weight:700;text-decoration:none;white-space:nowrap;">Claim Sample →</a>
+    </div>
+  </div>
+
+  <div class="products-grid">
+
+    <!-- Onion Powder White -->
+    <div class="product-card reveal">
+      <div class="product-img product-img-white">
+        <div class="product-bag bag-white">
+          <div class="bag-top"></div>
+          <div class="bag-label green-label">
+            <div class="bag-label-brand">🌿 NP NATURALS</div>
+            <div class="bag-label-name">DEHYDRATED<br>ONION POWDER</div>
+          </div>
+          <div class="bag-emoji">🧅</div>
+        </div>
+        <div class="product-badge">Best Seller</div>
+      </div>
+      <div class="product-info">
+        <h3>Dehydrated Onion Powder</h3>
+        <p>Premium quality onion powder made from fresh onions. Intense flavour, long shelf life. Available in Grade A & Grade B. Perfect for cooking, seasoning & food processing.</p>
+        <div class="product-tags">
+          <span class="tag">Grade A & Grade B</span>
+          <span class="tag">5kg / 10kg / 25kg</span>
+          <span class="tag">No Preservatives</span>
+        </div>
+        <div class="product-footer">
+          <div class="price">₹349 / kg</div>
+          <button class="btn-order" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Order Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Garlic Powder Kraft -->
+    <div class="product-card reveal">
+      <div class="product-img product-img-kraft">
+        <div class="product-bag bag-kraft">
+          <div class="bag-top"></div>
+          <div class="bag-label">
+            <div class="bag-label-brand" style="color:#5a9e1a;">🌿 NP NATURALS</div>
+            <div class="bag-label-name" style="color:#333;">GARLIC<br>POWDER</div>
+          </div>
+          <div class="bag-emoji">🧄</div>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3>Garlic Powder</h3>
+        <p>Rich, aromatic garlic powder from the finest garlic bulbs. Perfectly dried and milled for maximum potency and shelf life. Available in Grade A & Grade B.</p>
+        <div class="product-tags">
+          <span class="tag">Grade A & Grade B</span>
+          <span class="tag">5kg / 10kg / 25kg</span>
+          <span class="tag">No Additives</span>
+        </div>
+        <div class="product-footer">
+          <div class="price">₹299 / kg</div>
+          <button class="btn-order" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Order Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Moringa Powder Green -->
+    <div class="product-card reveal">
+      <div class="product-img product-img-green">
+        <div class="product-bag bag-green">
+          <div class="bag-top" style="background:rgba(255,255,255,0.2);"></div>
+          <div class="bag-label" style="background:rgba(255,255,255,0.9);">
+            <div class="bag-label-brand" style="color:#5a9e1a;">🌿 NP NATURALS</div>
+            <div class="bag-label-name" style="color:#333;">MORINGA<br>POWDER</div>
+          </div>
+          <div class="bag-emoji">🌿</div>
+        </div>
+        <div class="product-badge">Superfood</div>
+      </div>
+      <div class="product-info">
+        <h3>Moringa Powder</h3>
+        <p>Nature's superfood — packed with vitamins, minerals and antioxidants. Sourced from fresh moringa leaves, pure and potent. Wholesale packs available.</p>
+        <div class="product-tags">
+          <span class="tag">Grade A & Grade B</span>
+          <span class="tag">5kg / 10kg / 25kg</span>
+          <span class="tag">Superfood</span>
+        </div>
+        <div class="product-footer">
+          <div class="price">₹349 / kg</div>
+          <button class="btn-order" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Order Now</button>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="why-grid">
+    <div class="why-text">
+      <div class="section-label">Why Choose Us</div>
+      <h2 class="section-title">Quality You Can<br>Taste the Difference</h2>
+      <p class="section-sub">We believe natural food starts with honest ingredients. Every batch is quality checked, additive-free, and packed with care.</p>
+      <div class="feature-list reveal">
+        <div class="feature-item">
+          <div class="feature-icon">🌾</div>
+          <div>
+            <h4>Farm Direct Sourcing</h4>
+            <p>We work directly with farmers to ensure freshness and traceability from field to pack.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔬</div>
+          <div>
+            <h4>Quality Tested</h4>
+            <p>Every batch undergoes rigorous quality checks. No pesticides, no fillers, no compromise.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📦</div>
+          <div>
+            <h4>Bulk & Retail Ready</h4>
+            <p>Flexible packaging for bulk wholesale orders, retail shelves, and private labelling.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🚚</div>
+          <div>
+            <h4>Fast Maharashtra Delivery</h4>
+            <p>Quick and reliable shipping across Maharashtra with proper packaging to maintain freshness.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="why-visual reveal">
+      <div class="why-card">
+        <div class="why-card-emoji">🌿</div>
+        <h3>100% Natural Promise</h3>
+        <p>We guarantee zero artificial additives, colours or preservatives in every product we make.</p>
+      </div>
+      <div class="why-card">
+        <img src="https://www.fssai.gov.in/upload/uploadfiles/files/Fssai_logo.png" alt="FSSAI Logo" style="height:48px;object-fit:contain;margin-bottom:10px;" onerror="this.style.display='none'">
+        <h3>FSSAI Registered</h3>
+        <p>Reg. No: <strong>21525028002788</strong><br>Issued by FDA Maharashtra</p>
+      </div>
+      <div class="why-card">
+        <div class="why-card-emoji">♻️</div>
+        <h3>Eco Packaging</h3>
+        <p>Sustainable kraft and recyclable pouches to reduce environmental impact.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FSSAI TRUST STRIP -->
+<div style="background:#f0f7e6;border-top:1px solid rgba(90,158,26,0.15);border-bottom:1px solid rgba(90,158,26,0.15);padding:24px 5%;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <img src="https://www.fssai.gov.in/upload/uploadfiles/files/Fssai_logo.png" alt="FSSAI Logo" style="height:52px;object-fit:contain;" onerror="this.style.display='none'">
+    <div>
+      <div style="font-size:0.7rem;font-weight:700;color:#3d6e10;letter-spacing:1px;text-transform:uppercase;">FSSAI Registered Business</div>
+      <div style="font-size:0.92rem;font-weight:700;color:#1a1a1a;">Reg. No: 21525028002788</div>
+      <div style="font-size:0.75rem;color:#6b6b6b;">Government of Maharashtra · Food & Drug Administration</div>
+    </div>
+  </div>
+  <div style="width:1px;height:48px;background:rgba(90,158,26,0.2);"></div>
+  <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+    <div style="text-align:center;"><div style="font-size:1.4rem;">✅</div><div style="font-size:0.75rem;font-weight:600;color:#3d6e10;margin-top:4px;">100% Compliant</div></div>
+    <div style="text-align:center;"><div style="font-size:1.4rem;">🏭</div><div style="font-size:0.75rem;font-weight:600;color:#3d6e10;margin-top:4px;">General Manufacturing</div></div>
+    <div style="text-align:center;"><div style="font-size:1.4rem;">📍</div><div style="font-size:0.75rem;font-weight:600;color:#3d6e10;margin-top:4px;">Nashik, Maharashtra</div></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-visual reveal">
+      <div class="about-main-card">
+        <span class="about-leaf">🌱</span>
+        <h3>Founded by Nikhil Nilesh Pagar</h3>
+        <p>NP Naturals is a Maharashtra-based manufacturer dedicated to producing the purest dehydrated agricultural powders — from field to pack, with zero shortcuts.</p>
+        <div class="about-tag-row">
+          <span class="about-tag">Maharashtra 🇮🇳</span>
+          <span class="about-tag">Direct Manufacturer</span>
+          <span class="about-tag">Grade A & B</span>
+          <span class="about-tag">FSSAI Reg: 21525028002788</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <div class="section-label">About Us</div>
+      <h2 class="section-title">Our Story &<br>Our Mission</h2>
+      <p class="section-sub">Hi, I'm Nikhil Pagar — founder of NP Naturals, a Maharashtra-based manufacturer of premium dehydrated agricultural products.</p>
+      <p>We specialise in Dehydrated Onion Powder, Garlic Powder, and Moringa Powder — all made from 100% pure ingredients with absolutely no additives, colours, or preservatives.</p>
+      <p>We offer flexible wholesale packs of <strong>5kg, 10kg, and 25kg</strong>, with both <strong>Grade A and Grade B</strong> quality options to suit your requirements and budget. A <strong>free 200g sample</strong> is available for new buyers — just reach out!</p>
+      <div class="values-row">
+        <div class="val-box"><h5>🌾 100% Pure</h5><p>No synthetic additives — ever.</p></div>
+        <div class="val-box"><h5>📦 Flexible Packs</h5><p>5kg / 10kg / 25kg wholesale.</p></div>
+        <div class="val-box"><h5>🏅 Grade A & B</h5><p>Quality options for every budget.</p></div>
+        <div class="val-box"><h5>🎁 Free Sample</h5><p>200g free sample for new buyers.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-info reveal">
+      <div class="section-label">Contact Us</div>
+      <h2 class="section-title">Let's Grow<br>Together</h2>
+      <p class="section-sub">Reach out to Nikhil Pagar for pricing, bulk orders, or to claim your free 200g sample. We're happy to discuss your monthly requirements!</p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-icon">👤</div>
+          <div>
+            <h5>Contact Person</h5>
+            <p>Nikhil Nilesh Pagar — Founder, NP Naturals</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div>
+            <h5>Email Us</h5>
+            <a href="mailto:npnaturals.india@gmail.com">npnaturals.india@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <h5>Call / WhatsApp</h5>
+            <a href="tel:+918087362932">+91 8087362932</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div>
+            <h5>Instagram</h5>
+            <a href="#">@np.naturals</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon" style="background:transparent;padding:0;width:auto;">
+            <img src="https://www.fssai.gov.in/upload/uploadfiles/files/Fssai_logo.png" alt="FSSAI" style="height:44px;object-fit:contain;" onerror="this.outerHTML='<div style=\'width:44px;height:44px;background:rgba(90,158,26,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;\'>🏅</div>'">
+          </div>
+          <div>
+            <h5>FSSAI Registration</h5>
+            <p>Reg. No: <strong>21525028002788</strong> · FDA Maharashtra</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <h5>Location</h5>
+            <p>Maharashtra, India — Fast delivery across Maharashtra</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕘</div>
+          <div>
+            <h5>Business Hours</h5>
+            <p>Mon–Sat, 9:00 AM – 6:00 PM IST</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form reveal">
+      <h3>Send Us a Message</h3>
+      <form id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name *</label>
+            <input type="text" placeholder="Your first name" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Your last name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+91 XXXXX XXXXX">
+        </div>
+        <div class="form-group">
+          <label>Product Interest</label>
+          <select>
+            <option value="">Select a product...</option>
+            <option>Dehydrated Onion Powder</option>
+            <option>Garlic Powder</option>
+            <option>Moringa Powder</option>
+            <option>Custom / Bulk Order</option>
+            <option>Multiple Products</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message *</label>
+          <textarea placeholder="Tell us your monthly consumption, preferred pack size (5kg/10kg/25kg), grade preference (A or B), and delivery location..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Send Message ✦</button>
+        <div class="form-success" id="formSuccess">
+          <p>✅ Thank you! We'll get back to you within 24 hours.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-text" style="font-size:1.1rem;color:white;font-weight:700;margin-bottom:14px;">🌿 NP NATURALS</div>
+      <p>Maharashtra-based manufacturer of premium Dehydrated Onion Powder, Garlic Powder & Moringa Powder. 100% pure, Grade A & B, wholesale packs available.</p>
+      <div class="social-row">
+        <div class="social-icon">📸</div>
+        <div class="social-icon">💼</div>
+        <div class="social-icon">🐦</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Products</h5>
+      <ul>
+        <li><a href="#products">Onion Powder</a></li>
+        <li><a href="#products">Garlic Powder</a></li>
+        <li><a href="#products">Moringa Powder</a></li>
+        <li><a href="#contact">Bulk Orders</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#why">Why Choose Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="mailto:npnaturals.india@gmail.com">npnaturals.india@gmail.com</a></li>
+        <li><a href="tel:+918087362932">+91 8087362932</a></li>
+        <li><a href="#">@np.naturals</a></li>
+        <li><a href="#">India 🇮🇳</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 NP Naturals | Nikhil Nilesh Pagar. All rights reserved.</p>
+    <p>FSSAI Reg: 21525028002788 · Maharashtra, India 🇮🇳</p>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+  }));
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Contact form
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('formSuccess').classList.add('show');
+    e.target.reset();
+    setTimeout(() => document.getElementById('formSuccess').classList.remove('show'), 5000);
+  }
+</script>
+</body>
+</html>
