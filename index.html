@@ -557,60 +557,140 @@
   }
 
 
-  /* ── UPI MODAL ── */
+  /* ── CHECKOUT MODAL ── */
   .upi-modal-overlay {
-    display: none;
-    position: fixed; inset: 0; z-index: 9999;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(4px);
-    align-items: center; justify-content: center;
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+    align-items: center; justify-content: center; padding: 16px;
   }
-  .upi-modal-overlay.active { display: flex; }
   .upi-modal-box {
-    background: #fff;
-    border-radius: 20px;
-    padding: 32px 28px 28px;
-    max-width: 420px; width: 92%;
+    background: #fff; border-radius: 20px;
+    width: 100%; max-width: 460px;
+    max-height: 92vh; overflow-y: auto;
     position: relative;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.2);
-    animation: modalPop .3s cubic-bezier(.34,1.56,.64,1) both;
+    box-shadow: 0 28px 70px rgba(0,0,0,0.22);
+    animation: modalPop .32s cubic-bezier(.34,1.46,.64,1) both;
   }
   @keyframes modalPop {
-    from { transform: scale(0.85) translateY(20px); opacity: 0; }
+    from { transform: scale(0.88) translateY(24px); opacity: 0; }
     to   { transform: scale(1) translateY(0); opacity: 1; }
   }
+  /* Step progress bar */
+  .co-steps {
+    display: flex; align-items: center;
+    padding: 20px 24px 0; gap: 0;
+  }
+  .co-step {
+    display: flex; flex-direction: column; align-items: center; flex: 1;
+    font-size: 0.7rem; font-weight: 600; color: #bbb;
+    text-transform: uppercase; letter-spacing: 0.6px; gap: 6px;
+  }
+  .co-step.active { color: var(--green); }
+  .co-step.done { color: var(--green-dark); }
+  .co-step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid #ddd; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; background: #fff; color: #bbb;
+    transition: all .3s;
+  }
+  .co-step.active .co-step-num { border-color: var(--green); color: var(--green); background: #f0f7e6; }
+  .co-step.done .co-step-num { border-color: var(--green); background: var(--green); color: #fff; }
+  .co-step-line { flex: 1; height: 2px; background: #eee; margin-bottom: 20px; }
+  .co-step-line.done { background: var(--green); }
+  /* Modal header area */
+  .co-header {
+    padding: 16px 24px 0;
+    border-bottom: 1px solid #f2f2f2; margin-bottom: 0;
+  }
+  .co-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem; font-weight: 700; color: var(--text); margin-bottom: 2px;
+  }
+  .co-header p { font-size: 0.82rem; color: var(--text-muted); padding-bottom: 14px; }
+  /* Close button */
   .upi-modal-close {
-    position: absolute; top: 14px; right: 16px;
-    background: #f0f0f0; border: none; border-radius: 50%;
-    width: 32px; height: 32px; font-size: 0.9rem;
-    cursor: pointer; color: #555; transition: background .2s;
+    position: absolute; top: 14px; right: 14px;
+    background: #f2f2f2; border: none; border-radius: 50%;
+    width: 30px; height: 30px; font-size: 0.85rem;
+    cursor: pointer; color: #666; transition: background .2s; z-index: 10;
   }
   .upi-modal-close:hover { background: #e0e0e0; }
-  .upi-modal-header { text-align: center; margin-bottom: 20px; }
-  .upi-modal-icon { font-size: 2.4rem; margin-bottom: 6px; }
-  .upi-modal-header h3 { font-family: "Cormorant Garamond", serif; font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-  .upi-modal-amount { font-size: 0.88rem; color: var(--text-muted); }
-  .upi-modal-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; text-align: center; margin-bottom: 14px; }
-  .upi-app-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 10px; margin-bottom: 22px;
+  /* Form inside modal */
+  .co-form { padding: 20px 24px 24px; }
+  .co-field { margin-bottom: 14px; }
+  .co-field label {
+    display: block; font-size: 0.78rem; font-weight: 600;
+    color: var(--text); margin-bottom: 5px; letter-spacing: 0.2px;
   }
+  .co-field label span { color: #e53e3e; }
+  .co-field input, .co-field select, .co-field textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #e2e8f0;
+    border-radius: 10px; font-size: 0.88rem; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: #fafafa; transition: border .2s, background .2s;
+    outline: none;
+  }
+  .co-field input:focus, .co-field select:focus, .co-field textarea:focus {
+    border-color: var(--green); background: #fff;
+    box-shadow: 0 0 0 3px rgba(90,158,26,0.1);
+  }
+  .co-field textarea { resize: vertical; min-height: 70px; }
+  .co-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  /* Order summary card */
+  .co-summary {
+    margin: 0 24px 20px;
+    background: #f8fef3; border: 1.5px solid #c8e6a0;
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .co-summary-title { font-size: 0.72rem; font-weight: 700; color: var(--green-dark); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+  .co-summary-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; margin-bottom: 6px; }
+  .co-summary-row:last-child { margin-bottom: 0; border-top: 1px dashed #c8e6a0; padding-top: 8px; margin-top: 4px; font-weight: 700; color: var(--green-dark); font-size: 0.95rem; }
+  .co-summary-row span:first-child { color: var(--text-muted); }
+  /* UPI app buttons */
+  .upi-modal-label { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; text-align: center; margin-bottom: 14px; }
+  .upi-app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; padding: 0 24px; }
   .upi-app-btn {
     display: flex; flex-direction: column; align-items: center; gap: 8px;
-    padding: 14px 6px; border-radius: 14px;
+    padding: 12px 6px; border-radius: 14px;
     border: 1.5px solid #eee; text-decoration: none; color: var(--text);
-    font-size: 0.72rem; font-weight: 600; transition: all .2s;
-    cursor: pointer;
+    font-size: 0.7rem; font-weight: 600; transition: all .2s; cursor: pointer;
+    background: #fff;
   }
   .upi-app-btn:hover { border-color: var(--green); background: #f0f7e6; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(90,158,26,0.15); }
   .upi-app-logo { border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-  .upi-qr-section { text-align: center; border-top: 1px solid #eee; padding-top: 18px; }
-  .upi-qr-box { display: inline-block; padding: 10px; background: #fff; border: 1.5px solid #eee; border-radius: 12px; margin: 10px auto; }
-  .upi-qr-box img { display: block; border-radius: 6px; }
-  .upi-qr-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
-  @media (max-width: 400px) {
+  .upi-qr-section { text-align: center; border-top: 1px solid #eee; padding: 16px 24px 0; margin-bottom: 4px; }
+  .upi-qr-box { display: inline-block; padding: 10px; background: #fff; border: 1.5px solid #eee; border-radius: 12px; margin: 8px auto; }
+  .upi-qr-hint { font-size: 0.74rem; color: var(--text-muted); margin-top: 4px; }
+  /* Buttons */
+  .co-btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  .co-btn-back {
+    flex: 0 0 auto; padding: 12px 20px; border-radius: 50px;
+    border: 1.5px solid #ddd; background: #fff; color: var(--text);
+    font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .co-btn-back:hover { border-color: var(--green); color: var(--green); }
+  .co-btn-next {
+    flex: 1; padding: 13px 20px; border-radius: 50px;
+    border: none; background: linear-gradient(135deg, #5a9e1a, #3d6e10);
+    color: #fff; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; transition: all .25s; letter-spacing: 0.3px;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 14px rgba(90,158,26,0.3);
+  }
+  .co-btn-next:hover { background: linear-gradient(135deg, #3d6e10, #2c4e0a); box-shadow: 0 8px 20px rgba(90,158,26,0.4); transform: translateY(-1px); }
+  .co-notice { font-size: 0.72rem; color: var(--text-muted); text-align: center; padding: 0 24px 20px; line-height: 1.5; }
+  /* Delivery address tag */
+  .co-delivery-tag {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: #fffbf0; border: 1.5px solid #f0d070;
+    border-radius: 12px; padding: 12px 14px; margin: 0 24px 16px;
+    font-size: 0.82rem; color: var(--text);
+  }
+  .co-delivery-tag strong { display: block; color: var(--brown); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  @media (max-width: 420px) {
     .upi-app-grid { grid-template-columns: repeat(2, 1fr); }
-    .upi-modal-box { padding: 24px 16px 20px; }
+    .upi-modal-box { max-height: 100vh; border-radius: 16px; }
+    .co-row { grid-template-columns: 1fr; }
   }
 
   /* ── UPI BUTTON ── */
@@ -730,7 +810,7 @@
         </div>
         <div class="product-footer">
           <div class="price">₹349 / kg</div>
-          <button class="btn-order btn-upi" onclick="openUpiModal('Dehydrated Onion Powder', 349)"><span class="upi-icon">₹</span> Pay via UPI</button>
+          <button class="btn-order btn-upi" onclick="openUpiModal('Dehydrated Onion Powder', 349)"><span class="upi-icon">🛒</span> BUY</button>
         </div>
       </div>
     </div>
@@ -757,7 +837,7 @@
         </div>
         <div class="product-footer">
           <div class="price">₹299 / kg</div>
-          <button class="btn-order btn-upi" onclick="openUpiModal('Garlic Powder', 299)"><span class="upi-icon">₹</span> Pay via UPI</button>
+          <button class="btn-order btn-upi" onclick="openUpiModal('Garlic Powder', 299)"><span class="upi-icon">🛒</span> BUY</button>
         </div>
       </div>
     </div>
@@ -785,7 +865,7 @@
         </div>
         <div class="product-footer">
           <div class="price">₹349 / kg</div>
-          <button class="btn-order btn-upi" onclick="openUpiModal('Moringa Powder', 349)"><span class="upi-icon">₹</span> Pay via UPI</button>
+          <button class="btn-order btn-upi" onclick="openUpiModal('Moringa Powder', 349)"><span class="upi-icon">🛒</span> BUY</button>
         </div>
       </div>
     </div>
@@ -1185,56 +1265,165 @@
   }
 </script>
 
-<!-- UPI Payment Modal -->
+<!-- ══ CHECKOUT MODAL ══ -->
 <div id="upiModal" class="upi-modal-overlay" onclick="closeUpiModal(event)">
   <div class="upi-modal-box">
-    <button class="upi-modal-close" onclick="document.getElementById('upiModal').style.display='none'">✕</button>
-    <div class="upi-modal-header">
-      <div class="upi-modal-icon">💳</div>
-      <h3 id="upiModalTitle">Pay via UPI</h3>
-      <p class="upi-modal-amount">Amount: <strong id="upiModalAmount">₹349</strong> &nbsp;|&nbsp; UPI: <span style="color:var(--green)">9322362932@ybl</span></p>
+    <button class="upi-modal-close" onclick="closeModalFull()" title="Close">✕</button>
+
+    <!-- Step progress -->
+    <div class="co-steps">
+      <div class="co-step active" id="step1Indicator">
+        <div class="co-step-num" id="step1Num">1</div>
+        <span>Order Details</span>
+      </div>
+      <div class="co-step-line" id="stepLine"></div>
+      <div class="co-step" id="step2Indicator">
+        <div class="co-step-num" id="step2Num">2</div>
+        <span>Payment</span>
+      </div>
     </div>
 
-    <p class="upi-modal-label">Choose your UPI app to pay:</p>
+    <!-- ── STEP 1: Order Form ── -->
+    <div id="coStep1">
+      <div class="co-header">
+        <h3>🛒 Place Your Order</h3>
+        <p id="coStep1Sub">Filling order for: <strong id="coProductName">—</strong></p>
+      </div>
+      <div class="co-form">
 
-    <div class="upi-app-grid">
-      <!-- GPay -->
-      <a id="gpayBtn" href="#" class="upi-app-btn" onclick="payWithApp('gpay', event)">
-        <div class="upi-app-logo gpay-logo">
-          <svg viewBox="0 0 48 48" width="36" height="36"><path fill="#4285F4" d="M24 9.5c3.9 0 7.4 1.4 10.1 3.7L40 7.3C36.1 3.8 30.4 1.5 24 1.5 14.9 1.5 7.1 6.9 3.4 14.5l6.9 5.3C12.1 13.5 17.5 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.2-3.2-.5-4.7H24v9h12.6c-.6 3-2.3 5.5-4.8 7.2l7.4 5.7C43.4 37.5 46.5 31.4 46.5 24.5z"/><path fill="#FBBC04" d="M10.3 28.2A15 15 0 0 1 9.5 24c0-1.5.3-2.9.7-4.2L3.4 14.5A22.5 22.5 0 0 0 1.5 24c0 3.4.8 6.6 2.1 9.5l6.7-5.3z"/><path fill="#EA4335" d="M24 46.5c6.4 0 11.8-2.1 15.7-5.7l-7.4-5.7c-2.1 1.4-4.8 2.2-8.3 2.2-6.5 0-11.9-4-13.7-9.6l-6.9 5.3C7.1 41.1 14.9 46.5 24 46.5z"/><path fill="none" d="M1.5 1.5h45v45h-45z"/></svg>
+        <div class="co-row">
+          <div class="co-field">
+            <label>Full Name <span>*</span></label>
+            <input type="text" id="coName" placeholder="Your full name">
+          </div>
+          <div class="co-field">
+            <label>Phone / WhatsApp <span>*</span></label>
+            <input type="tel" id="coPhone" placeholder="+91 XXXXX XXXXX">
+          </div>
         </div>
-        <span>Google Pay</span>
-      </a>
 
-      <!-- PhonePe -->
-      <a id="phonepeBtn" href="#" class="upi-app-btn" onclick="payWithApp('phonepe', event)">
-        <div class="upi-app-logo phonepe-logo">
-          <svg viewBox="0 0 48 48" width="36" height="36"><circle cx="24" cy="24" r="22" fill="#5f259f"/><text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-size="22" fill="white" font-weight="bold" font-family="Arial">Pe</text></svg>
+        <div class="co-field">
+          <label>Delivery Address <span>*</span></label>
+          <input type="text" id="coAddress" placeholder="Flat/House No., Street, Area">
         </div>
-        <span>PhonePe</span>
-      </a>
 
-      <!-- Paytm -->
-      <a id="paytmBtn" href="#" class="upi-app-btn" onclick="payWithApp('paytm', event)">
-        <div class="upi-app-logo paytm-logo">
-          <svg viewBox="0 0 48 48" width="36" height="36"><rect width="48" height="48" rx="8" fill="#00B9F1"/><text x="50%" y="57%" dominant-baseline="middle" text-anchor="middle" font-size="13" fill="white" font-weight="bold" font-family="Arial">Paytm</text></svg>
+        <div class="co-row">
+          <div class="co-field">
+            <label>City / District <span>*</span></label>
+            <input type="text" id="coCity" placeholder="e.g. Pune">
+          </div>
+          <div class="co-field">
+            <label>PIN Code <span>*</span></label>
+            <input type="text" id="coPincode" placeholder="6-digit PIN" maxlength="6">
+          </div>
         </div>
-        <span>Paytm</span>
-      </a>
 
-      <!-- Any UPI App -->
-      <a id="upiAnyBtn" href="#" class="upi-app-btn" onclick="payWithApp('any', event)">
-        <div class="upi-app-logo any-logo">
-          <svg viewBox="0 0 48 48" width="36" height="36"><rect width="48" height="48" rx="8" fill="#5a9e1a"/><text x="50%" y="57%" dominant-baseline="middle" text-anchor="middle" font-size="11" fill="white" font-weight="bold" font-family="Arial">Any UPI</text></svg>
+        <div class="co-row">
+          <div class="co-field">
+            <label>Quantity (kg) <span>*</span></label>
+            <select id="coKg">
+              <option value="1">1 kg</option>
+              <option value="5">5 kg</option>
+              <option value="10">10 kg</option>
+              <option value="25">25 kg</option>
+              <option value="custom">Custom amount</option>
+            </select>
+          </div>
+          <div class="co-field">
+            <label>Grade Preference</label>
+            <select id="coGrade">
+              <option value="Grade A">Grade A (Premium)</option>
+              <option value="Grade B">Grade B (Standard)</option>
+              <option value="No preference">No preference</option>
+            </select>
+          </div>
         </div>
-        <span>Any UPI App</span>
-      </a>
+
+        <div class="co-field" id="coCustomKgField" style="display:none;">
+          <label>Custom Quantity (kg) <span>*</span></label>
+          <input type="number" id="coCustomKg" placeholder="Enter kg amount" min="1">
+        </div>
+
+        <div class="co-field">
+          <label>Additional Notes</label>
+          <textarea id="coNotes" placeholder="Any special requirements, delivery instructions..."></textarea>
+        </div>
+
+        <div class="co-btn-row">
+          <button class="co-btn-next" onclick="goToPayment()">Proceed to Payment →</button>
+        </div>
+      </div>
     </div>
 
-    <div class="upi-qr-section">
-      <p class="upi-modal-label">Or scan QR code:</p>
-      <div id="upiQrCode" class="upi-qr-box"></div>
-      <p class="upi-qr-hint">Open your UPI app → Scan QR → Pay</p>
+    <!-- ── STEP 2: Payment ── -->
+    <div id="coStep2" style="display:none;">
+      <div class="co-header">
+        <h3>💳 Complete Payment</h3>
+        <p>Choose your UPI app to pay instantly</p>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="co-summary">
+        <div class="co-summary-title">📦 Order Summary</div>
+        <div class="co-summary-row"><span>Product</span><span id="sumProduct">—</span></div>
+        <div class="co-summary-row"><span>Quantity</span><span id="sumQty">—</span></div>
+        <div class="co-summary-row"><span>Grade</span><span id="sumGrade">—</span></div>
+        <div class="co-summary-row"><span>Deliver To</span><span id="sumAddress" style="text-align:right;max-width:55%;">—</span></div>
+        <div class="co-summary-row"><span>Total Amount</span><span id="sumTotal">—</span></div>
+      </div>
+
+      <!-- Delivery tag -->
+      <div class="co-delivery-tag">
+        <span style="font-size:1.3rem;">📍</span>
+        <div><strong>Delivering To</strong><span id="sumDeliveryFull">—</span></div>
+      </div>
+
+      <!-- UPI Apps -->
+      <p class="upi-modal-label" style="padding: 0 24px;">Select UPI app to pay:</p>
+      <div class="upi-app-grid">
+        <a id="gpayBtn" href="#" class="upi-app-btn" onclick="payWithApp('gpay', event)">
+          <div class="upi-app-logo">
+            <svg viewBox="0 0 48 48" width="36" height="36"><path fill="#4285F4" d="M24 9.5c3.9 0 7.4 1.4 10.1 3.7L40 7.3C36.1 3.8 30.4 1.5 24 1.5 14.9 1.5 7.1 6.9 3.4 14.5l6.9 5.3C12.1 13.5 17.5 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.2-3.2-.5-4.7H24v9h12.6c-.6 3-2.3 5.5-4.8 7.2l7.4 5.7C43.4 37.5 46.5 31.4 46.5 24.5z"/><path fill="#FBBC04" d="M10.3 28.2A15 15 0 0 1 9.5 24c0-1.5.3-2.9.7-4.2L3.4 14.5A22.5 22.5 0 0 0 1.5 24c0 3.4.8 6.6 2.1 9.5l6.7-5.3z"/><path fill="#EA4335" d="M24 46.5c6.4 0 11.8-2.1 15.7-5.7l-7.4-5.7c-2.1 1.4-4.8 2.2-8.3 2.2-6.5 0-11.9-4-13.7-9.6l-6.9 5.3C7.1 41.1 14.9 46.5 24 46.5z"/></svg>
+          </div>
+          <span>Google Pay</span>
+        </a>
+        <a id="phonepeBtn" href="#" class="upi-app-btn" onclick="payWithApp('phonepe', event)">
+          <div class="upi-app-logo">
+            <svg viewBox="0 0 48 48" width="36" height="36"><circle cx="24" cy="24" r="22" fill="#5f259f"/><text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-size="22" fill="white" font-weight="bold" font-family="Arial">Pe</text></svg>
+          </div>
+          <span>PhonePe</span>
+        </a>
+        <a id="paytmBtn" href="#" class="upi-app-btn" onclick="payWithApp('paytm', event)">
+          <div class="upi-app-logo">
+            <svg viewBox="0 0 48 48" width="36" height="36"><rect width="48" height="48" rx="8" fill="#00B9F1"/><text x="50%" y="57%" dominant-baseline="middle" text-anchor="middle" font-size="13" fill="white" font-weight="bold" font-family="Arial">Paytm</text></svg>
+          </div>
+          <span>Paytm</span>
+        </a>
+        <a id="upiAnyBtn" href="#" class="upi-app-btn" onclick="payWithApp('any', event)">
+          <div class="upi-app-logo">
+            <svg viewBox="0 0 48 48" width="36" height="36"><rect width="48" height="48" rx="8" fill="#5a9e1a"/><text x="50%" y="57%" dominant-baseline="middle" text-anchor="middle" font-size="11" fill="white" font-weight="bold" font-family="Arial">Any UPI</text></svg>
+          </div>
+          <span>Any UPI</span>
+        </a>
+      </div>
+
+      <!-- QR Code -->
+      <div class="upi-qr-section">
+        <p class="upi-modal-label">Or scan QR with your phone:</p>
+        <div id="upiQrCode" class="upi-qr-box"></div>
+        <p class="upi-qr-hint">Open any UPI app → Scan QR → Pay</p>
+      </div>
+
+      <!-- Back button -->
+      <div style="padding: 0 24px 8px;">
+        <div class="co-btn-row">
+          <button class="co-btn-back" onclick="goBackToOrder()">← Edit Order</button>
+          <button class="co-btn-next" onclick="notifyNikhil()" style="background:linear-gradient(135deg,#25d366,#128C7E);">
+            📩 Also Notify via WhatsApp
+          </button>
+        </div>
+      </div>
+      <p class="co-notice">⚠️ After payment, please send payment screenshot on WhatsApp to confirm your order. Nikhil will confirm delivery within 2 hours.</p>
     </div>
 
   </div>
