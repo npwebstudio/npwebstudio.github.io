@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -374,6 +374,67 @@
   .values-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
   .val-box { background: white; border-radius: 12px; padding: 16px; border-left: 3px solid var(--green); }
   .val-box h5 { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; }
+
+  /* ── WHATSAPP BUTTON (contact info) ── */
+  .whatsapp-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #25D366; color: white;
+    padding: 14px 28px; border-radius: 50px;
+    font-weight: 700; font-size: 0.9rem;
+    text-decoration: none; margin-top: 28px;
+    transition: all .25s; box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+  }
+  .whatsapp-btn:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,0.45); }
+
+  /* ── DUAL FORM BUTTONS ── */
+  .form-dual-btns {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-top: 8px;
+  }
+  .btn-submit {
+    background: var(--green); color: white;
+    border: none; padding: 14px 20px; border-radius: 50px;
+    font-size: 0.88rem; font-weight: 700; cursor: pointer;
+    transition: all .25s; font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.3px;
+  }
+  .btn-submit:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(90,158,26,0.3); }
+
+  .btn-whatsapp-form {
+    background: #25D366; color: white;
+    border: none; padding: 14px 20px; border-radius: 50px;
+    font-size: 0.88rem; font-weight: 700; cursor: pointer;
+    transition: all .25s; font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .btn-whatsapp-form:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.35); }
+
+  /* ── FLOATING WHATSAPP BUBBLE ── */
+  .wa-float {
+    position: fixed; bottom: 28px; right: 28px; z-index: 999;
+    background: #25D366;
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px 14px 16px;
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(37,211,102,0.45);
+    text-decoration: none; color: white;
+    font-weight: 700; font-size: 0.85rem;
+    transition: all .3s; animation: waFloat 3s ease-in-out infinite;
+  }
+  .wa-float:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 14px 40px rgba(37,211,102,0.55); }
+  .wa-float-label { white-space: nowrap; }
+
+  @keyframes waFloat {
+    0%, 100% { box-shadow: 0 8px 32px rgba(37,211,102,0.45); }
+    50% { box-shadow: 0 12px 40px rgba(37,211,102,0.65); }
+  }
+
+  @media (max-width: 480px) {
+    .form-dual-btns { grid-template-columns: 1fr; }
+    .wa-float-label { display: none; }
+    .wa-float { padding: 16px; border-radius: 50%; }
+  }
   .val-box p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
 
   /* ── CONTACT ── */
@@ -762,10 +823,13 @@
 <!-- CONTACT -->
 <section id="contact">
   <div class="contact-inner">
+
+    <!-- LEFT: Contact Info -->
     <div class="contact-info reveal">
       <div class="section-label">Contact Us</div>
       <h2 class="section-title">Let's Grow<br>Together</h2>
       <p class="section-sub">Reach out to Nikhil Pagar for pricing, bulk orders, or to claim your free 200g sample. We're happy to discuss your monthly requirements!</p>
+
       <div class="contact-details">
         <div class="contact-item">
           <div class="contact-icon">👤</div>
@@ -792,7 +856,7 @@
           <div class="contact-icon">📱</div>
           <div>
             <h5>Instagram</h5>
-            <a href="#">@np.naturals</a>
+            <a href="https://instagram.com/np.naturals" target="_blank">@np.naturals</a>
           </div>
         </div>
         <div class="contact-item">
@@ -819,52 +883,113 @@
           </div>
         </div>
       </div>
+
+      <!-- WhatsApp Quick Connect -->
+      <a href="https://wa.me/918087362932?text=Hi%20Nikhil%2C%20I%20found%20NP%20Naturals%20online%20and%20I%27m%20interested%20in%20your%20products.%20Could%20you%20share%20pricing%20details%3F" target="_blank" class="whatsapp-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Chat on WhatsApp
+      </a>
     </div>
 
+    <!-- RIGHT: Contact Form (FormSubmit) -->
     <div class="contact-form reveal">
       <h3>Send Us a Message</h3>
-      <form id="contactForm" onsubmit="handleSubmit(event)">
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:24px;line-height:1.6;">Fill out the form below and we'll reply within 24 hours. Or chat with us instantly on WhatsApp!</p>
+
+      <!-- FormSubmit Integration -->
+      <form id="contactForm" action="https://formsubmit.co/npnaturals.india@gmail.com" method="POST" onsubmit="handleWhatsApp(event)">
+
+        <!-- FormSubmit hidden config -->
+        <input type="hidden" name="_subject" value="🌿 New Enquiry – NP Naturals Website">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="#contact">
+        <input type="hidden" name="_autoresponse" value="Thank you for contacting NP Naturals! We've received your enquiry and Nikhil will get back to you within 24 hours. In the meantime, feel free to WhatsApp us at +91 8087362932. — Team NP Naturals 🌿">
+
         <div class="form-row">
           <div class="form-group">
             <label>First Name *</label>
-            <input type="text" placeholder="Your first name" required>
+            <input type="text" name="First Name" placeholder="Your first name" required>
           </div>
           <div class="form-group">
             <label>Last Name</label>
-            <input type="text" placeholder="Your last name">
+            <input type="text" name="Last Name" placeholder="Your last name">
           </div>
         </div>
+
         <div class="form-group">
           <label>Email Address *</label>
-          <input type="email" placeholder="you@example.com" required>
+          <input type="email" name="Email" placeholder="you@example.com" required>
         </div>
+
         <div class="form-group">
-          <label>Phone Number</label>
-          <input type="tel" placeholder="+91 XXXXX XXXXX">
+          <label>Phone / WhatsApp Number *</label>
+          <input type="tel" name="Phone" id="phoneField" placeholder="+91 XXXXX XXXXX" required>
         </div>
+
         <div class="form-group">
           <label>Product Interest</label>
-          <select>
+          <select name="Product Interest" id="productField">
             <option value="">Select a product...</option>
             <option>Dehydrated Onion Powder</option>
             <option>Garlic Powder</option>
             <option>Moringa Powder</option>
             <option>Custom / Bulk Order</option>
             <option>Multiple Products</option>
+            <option>Free 200g Sample</option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label>Pack Size Needed</label>
+          <select name="Pack Size">
+            <option value="">Select pack size...</option>
+            <option>5 kg</option>
+            <option>10 kg</option>
+            <option>25 kg</option>
+            <option>Multiple / Mixed</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+
         <div class="form-group">
           <label>Message *</label>
-          <textarea placeholder="Tell us your monthly consumption, preferred pack size (5kg/10kg/25kg), grade preference (A or B), and delivery location..." required></textarea>
+          <textarea name="Message" id="messageField" placeholder="Tell us your monthly requirement, grade preference (A or B), and delivery location in Maharashtra..." required></textarea>
         </div>
-        <button type="submit" class="btn-submit">Send Message ✦</button>
+
+        <!-- Dual CTA buttons -->
+        <div class="form-dual-btns">
+          <button type="submit" class="btn-submit">
+            📧 Send via Email
+          </button>
+          <button type="button" class="btn-whatsapp-form" onclick="sendWhatsApp()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white" style="flex-shrink:0;">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Send via WhatsApp
+          </button>
+        </div>
+
+        <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:14px;">📧 Email goes directly to Nikhil · 💬 WhatsApp gets instant reply</p>
+
         <div class="form-success" id="formSuccess">
-          <p>✅ Thank you! We'll get back to you within 24 hours.</p>
+          <p>✅ Message sent! We'll reply within 24 hours. You can also WhatsApp us for a faster response.</p>
         </div>
       </form>
     </div>
+
   </div>
 </section>
+
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/918087362932?text=Hi%20Nikhil%2C%20I%27m%20interested%20in%20NP%20Naturals%20products.%20Can%20you%20share%20pricing%20and%20availability%3F" target="_blank" class="wa-float" title="Chat on WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+  <span class="wa-float-label">Chat with us!</span>
+</a>
 
 <!-- FOOTER -->
 <footer>
@@ -898,7 +1023,7 @@
     <div class="footer-col">
       <h5>Contact</h5>
       <ul>
-        <li><a href="mailto:npnaturals.india@gmail.com">npnaturals.india@gmail.com</a></li>
+        <li><a href="/cdn-cgi/l/email-protection#107e607e71646562717c633e797e74797150777d71797c3e737f7d"><span class="__cf_email__" data-cfemail="254b554b445150574449560b4c4b414c44654248444c490b464a48">[email&#160;protected]</span></a></li>
         <li><a href="tel:+918087362932">+91 8087362932</a></li>
         <li><a href="#">@np.naturals</a></li>
         <li><a href="#">India 🇮🇳</a></li>
@@ -910,6 +1035,7 @@
     <p>FSSAI Reg: 21525028002788 · Maharashtra, India 🇮🇳</p>
   </div>
 </footer>
+
 
 <script>
   // Navbar scroll effect
@@ -927,16 +1053,58 @@
 
   // Reveal on scroll
   const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Contact form
-  function handleSubmit(e) {
-    e.preventDefault();
-    document.getElementById('formSuccess').classList.add('show');
-    e.target.reset();
-    setTimeout(() => document.getElementById('formSuccess').classList.remove('show'), 5000);
+  // ── WHATSAPP: Build and open WhatsApp message from form data ──
+  function sendWhatsApp() {
+    const firstName = document.querySelector('input[name="First Name"]').value.trim();
+    const lastName  = document.querySelector('input[name="Last Name"]').value.trim();
+    const email     = document.querySelector('input[name="Email"]').value.trim();
+    const phone     = document.getElementById('phoneField').value.trim();
+    const product   = document.getElementById('productField').value;
+    const packSize  = document.querySelector('select[name="Pack Size"]').value;
+    const message   = document.getElementById('messageField').value.trim();
+
+    if (!firstName || !email || !phone || !message) {
+      alert('Please fill in all required fields (Name, Email, Phone, Message) before sending via WhatsApp.');
+      return;
+    }
+
+    const fullName = (firstName + ' ' + lastName).trim();
+    let waText = 'Hi Nikhil! I found NP Naturals online and I have an enquiry.\n\n';
+    waText += 'Name: ' + fullName + '\n';
+    waText += 'Email: ' + email + '\n';
+    waText += 'Phone: ' + phone + '\n';
+    if (product)  waText += 'Product Interest: ' + product + '\n';
+    if (packSize) waText += 'Pack Size: ' + packSize + '\n';
+    waText += 'Message: ' + message;
+
+    window.open('https://wa.me/918087362932?text=' + encodeURIComponent(waText), '_blank');
+  }
+
+  // ── FORMSUBMIT: Show success message after email submission ──
+  function handleWhatsApp(e) {
+    // FormSubmit will POST and redirect; show success banner optimistically
+    setTimeout(() => {
+      const success = document.getElementById('formSuccess');
+      if (success) {
+        success.style.display = 'block';
+        success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 400);
+  }
+
+  // Show success if redirected back from FormSubmit
+  if (window.location.hash === '#contact') {
+    const s = document.getElementById('formSuccess');
+    if (s) s.style.display = 'block';
   }
 </script>
 </body>
