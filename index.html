@@ -556,6 +556,63 @@
     .why-card:first-child { grid-column: span 1; }
   }
 
+
+  /* ── UPI MODAL ── */
+  .upi-modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .upi-modal-overlay.active { display: flex; }
+  .upi-modal-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 28px 28px;
+    max-width: 420px; width: 92%;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+    animation: modalPop .3s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes modalPop {
+    from { transform: scale(0.85) translateY(20px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  .upi-modal-close {
+    position: absolute; top: 14px; right: 16px;
+    background: #f0f0f0; border: none; border-radius: 50%;
+    width: 32px; height: 32px; font-size: 0.9rem;
+    cursor: pointer; color: #555; transition: background .2s;
+  }
+  .upi-modal-close:hover { background: #e0e0e0; }
+  .upi-modal-header { text-align: center; margin-bottom: 20px; }
+  .upi-modal-icon { font-size: 2.4rem; margin-bottom: 6px; }
+  .upi-modal-header h3 { font-family: "Cormorant Garamond", serif; font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .upi-modal-amount { font-size: 0.88rem; color: var(--text-muted); }
+  .upi-modal-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; text-align: center; margin-bottom: 14px; }
+  .upi-app-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-bottom: 22px;
+  }
+  .upi-app-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 14px 6px; border-radius: 14px;
+    border: 1.5px solid #eee; text-decoration: none; color: var(--text);
+    font-size: 0.72rem; font-weight: 600; transition: all .2s;
+    cursor: pointer;
+  }
+  .upi-app-btn:hover { border-color: var(--green); background: #f0f7e6; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(90,158,26,0.15); }
+  .upi-app-logo { border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .upi-qr-section { text-align: center; border-top: 1px solid #eee; padding-top: 18px; }
+  .upi-qr-box { display: inline-block; padding: 10px; background: #fff; border: 1.5px solid #eee; border-radius: 12px; margin: 10px auto; }
+  .upi-qr-box img { display: block; border-radius: 6px; }
+  .upi-qr-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
+  @media (max-width: 400px) {
+    .upi-app-grid { grid-template-columns: repeat(2, 1fr); }
+    .upi-modal-box { padding: 24px 16px 20px; }
+  }
+
   /* ── UPI BUTTON ── */
   .btn-upi {
     display: inline-flex;
@@ -673,7 +730,7 @@
         </div>
         <div class="product-footer">
           <div class="price">₹349 / kg</div>
-          <a class="btn-order btn-upi" href="upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=349&cu=INR&tn=Onion%20Powder%201kg"><span class="upi-icon">₹</span> Pay via UPI</a>
+          <button class="btn-order btn-upi" onclick="openUpiModal('Dehydrated Onion Powder', 349)"><span class="upi-icon">₹</span> Pay via UPI</button>
         </div>
       </div>
     </div>
@@ -700,7 +757,7 @@
         </div>
         <div class="product-footer">
           <div class="price">₹299 / kg</div>
-          <a class="btn-order btn-upi" href="upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=299&cu=INR&tn=Garlic%20Powder%201kg"><span class="upi-icon">₹</span> Pay via UPI</a>
+          <button class="btn-order btn-upi" onclick="openUpiModal('Garlic Powder', 299)"><span class="upi-icon">₹</span> Pay via UPI</button>
         </div>
       </div>
     </div>
@@ -728,7 +785,7 @@
         </div>
         <div class="product-footer">
           <div class="price">₹349 / kg</div>
-          <a class="btn-order btn-upi" href="upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=349&cu=INR&tn=Moringa%20Powder%201kg"><span class="upi-icon">₹</span> Pay via UPI</a>
+          <button class="btn-order btn-upi" onclick="openUpiModal('Moringa Powder', 349)"><span class="upi-icon">₹</span> Pay via UPI</button>
         </div>
       </div>
     </div>
@@ -1125,6 +1182,118 @@
         success.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
       }
     }, 300);
+  }
+</script>
+
+<!-- UPI Payment Modal -->
+<div id="upiModal" class="upi-modal-overlay" onclick="closeUpiModal(event)">
+  <div class="upi-modal-box">
+    <button class="upi-modal-close" onclick="document.getElementById('upiModal').style.display='none'">✕</button>
+    <div class="upi-modal-header">
+      <div class="upi-modal-icon">💳</div>
+      <h3 id="upiModalTitle">Pay via UPI</h3>
+      <p class="upi-modal-amount">Amount: <strong id="upiModalAmount">₹349</strong> &nbsp;|&nbsp; UPI: <span style="color:var(--green)">9322362932@ybl</span></p>
+    </div>
+
+    <p class="upi-modal-label">Choose your UPI app to pay:</p>
+
+    <div class="upi-app-grid">
+      <!-- GPay -->
+      <a id="gpayBtn" href="#" class="upi-app-btn" onclick="payWithApp('gpay', event)">
+        <div class="upi-app-logo gpay-logo">
+          <svg viewBox="0 0 48 48" width="36" height="36"><path fill="#4285F4" d="M24 9.5c3.9 0 7.4 1.4 10.1 3.7L40 7.3C36.1 3.8 30.4 1.5 24 1.5 14.9 1.5 7.1 6.9 3.4 14.5l6.9 5.3C12.1 13.5 17.5 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.2-3.2-.5-4.7H24v9h12.6c-.6 3-2.3 5.5-4.8 7.2l7.4 5.7C43.4 37.5 46.5 31.4 46.5 24.5z"/><path fill="#FBBC04" d="M10.3 28.2A15 15 0 0 1 9.5 24c0-1.5.3-2.9.7-4.2L3.4 14.5A22.5 22.5 0 0 0 1.5 24c0 3.4.8 6.6 2.1 9.5l6.7-5.3z"/><path fill="#EA4335" d="M24 46.5c6.4 0 11.8-2.1 15.7-5.7l-7.4-5.7c-2.1 1.4-4.8 2.2-8.3 2.2-6.5 0-11.9-4-13.7-9.6l-6.9 5.3C7.1 41.1 14.9 46.5 24 46.5z"/><path fill="none" d="M1.5 1.5h45v45h-45z"/></svg>
+        </div>
+        <span>Google Pay</span>
+      </a>
+
+      <!-- PhonePe -->
+      <a id="phonepeBtn" href="#" class="upi-app-btn" onclick="payWithApp('phonepe', event)">
+        <div class="upi-app-logo phonepe-logo">
+          <svg viewBox="0 0 48 48" width="36" height="36"><circle cx="24" cy="24" r="22" fill="#5f259f"/><text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-size="22" fill="white" font-weight="bold" font-family="Arial">Pe</text></svg>
+        </div>
+        <span>PhonePe</span>
+      </a>
+
+      <!-- Paytm -->
+      <a id="paytmBtn" href="#" class="upi-app-btn" onclick="payWithApp('paytm', event)">
+        <div class="upi-app-logo paytm-logo">
+          <svg viewBox="0 0 48 48" width="36" height="36"><rect width="48" height="48" rx="8" fill="#00B9F1"/><text x="50%" y="57%" dominant-baseline="middle" text-anchor="middle" font-size="13" fill="white" font-weight="bold" font-family="Arial">Paytm</text></svg>
+        </div>
+        <span>Paytm</span>
+      </a>
+
+      <!-- Any UPI App -->
+      <a id="upiAnyBtn" href="#" class="upi-app-btn" onclick="payWithApp('any', event)">
+        <div class="upi-app-logo any-logo">
+          <svg viewBox="0 0 48 48" width="36" height="36"><rect width="48" height="48" rx="8" fill="#5a9e1a"/><text x="50%" y="57%" dominant-baseline="middle" text-anchor="middle" font-size="11" fill="white" font-weight="bold" font-family="Arial">Any UPI</text></svg>
+        </div>
+        <span>Any UPI App</span>
+      </a>
+    </div>
+
+    <div class="upi-qr-section">
+      <p class="upi-modal-label">Or scan QR code:</p>
+      <div id="upiQrCode" class="upi-qr-box"></div>
+      <p class="upi-qr-hint">Open your UPI app → Scan QR → Pay</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── UPI PAYMENT MODAL ──
+  var _upiProduct = '';
+  var _upiAmount  = 0;
+
+  function openUpiModal(product, amount) {
+    _upiProduct = product;
+    _upiAmount  = amount;
+    var tn = encodeURIComponent(product + ' 1kg - NP Naturals');
+
+    document.getElementById('upiModalTitle').textContent = 'Pay for ' + product + ' (1 kg)';
+    document.getElementById('upiModalAmount').textContent = '₹' + amount;
+
+    // Set app-specific deep links
+    document.getElementById('gpayBtn').href    = 'tez://upi/pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
+    document.getElementById('phonepeBtn').href = 'phonepe://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
+    document.getElementById('paytmBtn').href   = 'paytmmp://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
+    document.getElementById('upiAnyBtn').href  = 'upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
+
+    // QR Code — built safely via DOM (avoids quote-escaping bugs)
+    var upiStr = 'upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
+    var qrUrl  = 'https://chart.googleapis.com/chart?chs=160x160&cht=qr&choe=UTF-8&chl=' + encodeURIComponent(upiStr);
+    var qrImg  = document.createElement('img');
+    qrImg.src    = qrUrl;
+    qrImg.width  = 160;
+    qrImg.height = 160;
+    qrImg.alt    = 'UPI QR Code';
+    qrImg.style.borderRadius = '8px';
+    qrImg.onerror = function() {
+      this.parentNode.innerHTML = '<p style="font-size:0.75rem;color:#999;margin-top:8px;">QR unavailable — use app buttons above</p>';
+    };
+    var qrBox = document.getElementById('upiQrCode');
+    qrBox.innerHTML = '';
+    qrBox.appendChild(qrImg);
+
+    document.getElementById('upiModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeUpiModal(e) {
+    if (e && e.target !== document.getElementById('upiModal')) return;
+    document.getElementById('upiModal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function payWithApp(app, e) {
+    // On desktop, show helpful hint after a moment
+    setTimeout(function() {
+      var ua = navigator.userAgent || '';
+      var isMobile = /Android|iPhone|iPad/i.test(ua);
+      if (!isMobile) {
+        alert('UPI apps open on mobile only.\nOn desktop: scan the QR code with your phone\'s camera or UPI app to pay.');
+      }
+    }, 600);
   }
 </script>
 </body>
