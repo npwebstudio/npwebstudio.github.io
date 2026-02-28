@@ -693,6 +693,33 @@
     .co-row { grid-template-columns: 1fr; }
   }
 
+  /* ── LIVE PRICE PREVIEW ── */
+  .co-price-preview {
+    background: linear-gradient(135deg, #f0fae6, #e8f5d8);
+    border: 2px solid var(--green);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    text-align: center;
+    animation: pricePop .25s ease;
+  }
+  @keyframes pricePop {
+    from { transform: scale(0.97); opacity: 0.7; }
+    to   { transform: scale(1);    opacity: 1;   }
+  }
+  .cpp-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; font-size: 0.95rem; font-weight: 600; color: var(--text); flex-wrap: wrap;
+  }
+  .cpp-total {
+    font-size: 1.5rem; font-weight: 800;
+    color: var(--green-dark); letter-spacing: -0.5px;
+  }
+  .cpp-note {
+    font-size: 0.72rem; color: var(--green-dark);
+    margin-top: 5px; font-weight: 500; opacity: 0.8;
+  }
+
   /* ── UPI BUTTON ── */
   .btn-upi {
     display: inline-flex;
@@ -1341,7 +1368,19 @@
 
         <div class="co-field" id="coCustomKgField" style="display:none;">
           <label>Custom Quantity (kg) <span>*</span></label>
-          <input type="number" id="coCustomKg" placeholder="Enter kg amount" min="1">
+          <input type="number" id="coCustomKg" placeholder="Enter kg amount" min="1" oninput="updateLivePrice()">
+        </div>
+
+        <!-- Live price preview -->
+        <div class="co-price-preview" id="coPricePreview">
+          <div class="cpp-row">
+            <span id="cppQtyLabel">1 kg</span>
+            <span>×</span>
+            <span id="cppUnitPrice">₹0/kg</span>
+            <span>=</span>
+            <span class="cpp-total" id="cppTotal">₹0</span>
+          </div>
+          <div class="cpp-note">Total amount you will pay via UPI</div>
         </div>
 
         <div class="co-field">
@@ -1430,32 +1469,131 @@
 </div>
 
 <script>
-  // ── UPI PAYMENT MODAL ──
-  var _upiProduct = '';
-  var _upiAmount  = 0;
+  // ══ CHECKOUT MODAL — 2 Step Flow ══
+  var _coProduct   = '';
+  var _coUnitPrice = 0;
+  var _coKg        = 1;
+  var _coTotal     = 0;
 
-  function openUpiModal(product, amount) {
-    _upiProduct = product;
-    _upiAmount  = amount;
-    var tn = encodeURIComponent(product + ' 1kg - NP Naturals');
+  // ── Step 1: Open modal with order form ──
+  function openUpiModal(product, unitPrice) {
+    _coProduct   = product;
+    _coUnitPrice = unitPrice;
 
-    document.getElementById('upiModalTitle').textContent = 'Pay for ' + product + ' (1 kg)';
-    document.getElementById('upiModalAmount').textContent = '₹' + amount;
+    // Reset step 1 fields display
+    document.getElementById('coProductName').textContent = product + '  —  ₹' + unitPrice + ' / kg';
+    document.getElementById('coKg').value = '1';
+    document.getElementById('coCustomKgField').style.display = 'none';
 
-    // Set app-specific deep links
-    document.getElementById('gpayBtn').href    = 'tez://upi/pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
-    document.getElementById('phonepeBtn').href = 'phonepe://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
-    document.getElementById('paytmBtn').href   = 'paytmmp://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
-    document.getElementById('upiAnyBtn').href  = 'upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
+    // Show live price immediately
+    updateLivePrice();
 
-    // QR Code — built safely via DOM (avoids quote-escaping bugs)
-    var upiStr = 'upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + amount + '&cu=INR&tn=' + tn;
+    // Show Step 1, hide Step 2
+    document.getElementById('coStep1').style.display = 'block';
+    document.getElementById('coStep2').style.display = 'none';
+
+    // Reset progress bar
+    document.getElementById('step1Indicator').className = 'co-step active';
+    document.getElementById('step1Num').textContent     = '1';
+    document.getElementById('step2Indicator').className = 'co-step';
+    document.getElementById('stepLine').className       = 'co-step-line';
+
+    // Show modal
+    document.getElementById('upiModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    setTimeout(function() {
+      document.querySelector('.upi-modal-box').scrollTop = 0;
+    }, 50);
+  }
+
+  // ── Live price preview ──
+  function updateLivePrice() {
+    var kgSel = document.getElementById('coKg');
+    if (!kgSel) return;
+    var val = kgSel.value;
+    var kg;
+    if (val === 'custom') {
+      kg = parseFloat(document.getElementById('coCustomKg').value) || 0;
+    } else {
+      kg = parseFloat(val) || 1;
+    }
+    var total = kg * _coUnitPrice;
+    var label = kg > 0 ? kg + ' kg' : '—';
+    document.getElementById('cppQtyLabel').textContent  = label;
+    document.getElementById('cppUnitPrice').textContent = '₹' + _coUnitPrice + '/kg';
+    document.getElementById('cppTotal').textContent     = kg > 0 ? '₹' + total.toLocaleString('en-IN') : '—';
+
+    // Replay animation
+    var el = document.getElementById('coPricePreview');
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = 'pricePop .25s ease';
+  }
+
+  // Custom kg toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    var kgSel = document.getElementById('coKg');
+    if (kgSel) {
+      kgSel.addEventListener('change', function() {
+        document.getElementById('coCustomKgField').style.display =
+          this.value === 'custom' ? 'block' : 'none';
+        updateLivePrice();
+      });
+    }
+  });
+
+  // ── Step 2: Validate form → show payment ──
+  function goToPayment() {
+    var name    = (document.getElementById('coName').value    || '').trim();
+    var phone   = (document.getElementById('coPhone').value   || '').trim();
+    var address = (document.getElementById('coAddress').value || '').trim();
+    var city    = (document.getElementById('coCity').value    || '').trim();
+    var pincode = (document.getElementById('coPincode').value || '').trim();
+    var kgSel   = document.getElementById('coKg').value;
+    var grade   = document.getElementById('coGrade').value;
+    var notes   = (document.getElementById('coNotes').value   || '').trim();
+
+    if (!name)                           { alert('Please enter your full name.');         document.getElementById('coName').focus();    return; }
+    if (!phone || phone.length < 7)      { alert('Please enter a valid phone number.');   document.getElementById('coPhone').focus();   return; }
+    if (!address)                        { alert('Please enter your delivery address.');  document.getElementById('coAddress').focus(); return; }
+    if (!city)                           { alert('Please enter your city/district.');     document.getElementById('coCity').focus();    return; }
+    if (!pincode || pincode.length < 6)  { alert('Please enter a valid 6-digit PIN.');   document.getElementById('coPincode').focus(); return; }
+
+    if (kgSel === 'custom') {
+      var cval = parseFloat(document.getElementById('coCustomKg').value);
+      if (!cval || cval <= 0) { alert('Please enter a valid quantity in kg.'); document.getElementById('coCustomKg').focus(); return; }
+      _coKg = cval;
+    } else {
+      _coKg = parseFloat(kgSel);
+    }
+
+    _coTotal = _coKg * _coUnitPrice;
+    var tn   = encodeURIComponent(_coProduct + ' ' + _coKg + 'kg - NP Naturals');
+    var fullAddress = address + ', ' + city + ' - ' + pincode;
+
+    // Fill order summary
+    document.getElementById('sumProduct').textContent     = _coProduct;
+    document.getElementById('sumQty').textContent         = _coKg + ' kg';
+    document.getElementById('sumGrade').textContent       = grade;
+    document.getElementById('sumAddress').textContent     = city + ' - ' + pincode;
+    document.getElementById('sumTotal').textContent       = '₹' + _coTotal.toLocaleString('en-IN');
+    document.getElementById('sumDeliveryFull').textContent = name + '  |  ' + fullAddress;
+
+    // Set UPI deep links with calculated total
+    document.getElementById('gpayBtn').href    = 'tez://upi/pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + _coTotal + '&cu=INR&tn=' + tn;
+    document.getElementById('phonepeBtn').href = 'phonepe://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + _coTotal + '&cu=INR&tn=' + tn;
+    document.getElementById('paytmBtn').href   = 'paytmmp://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + _coTotal + '&cu=INR&tn=' + tn;
+    document.getElementById('upiAnyBtn').href  = 'upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + _coTotal + '&cu=INR&tn=' + tn;
+
+    // Build QR code safely via DOM
+    var upiStr = 'upi://pay?pa=9322362932@ybl&pn=NP%20Naturals&am=' + _coTotal + '&cu=INR&tn=' + tn;
     var qrUrl  = 'https://chart.googleapis.com/chart?chs=160x160&cht=qr&choe=UTF-8&chl=' + encodeURIComponent(upiStr);
     var qrImg  = document.createElement('img');
-    qrImg.src    = qrUrl;
-    qrImg.width  = 160;
-    qrImg.height = 160;
-    qrImg.alt    = 'UPI QR Code';
+    qrImg.src             = qrUrl;
+    qrImg.width           = 160;
+    qrImg.height          = 160;
+    qrImg.alt             = 'UPI QR Code';
     qrImg.style.borderRadius = '8px';
     qrImg.onerror = function() {
       this.parentNode.innerHTML = '<p style="font-size:0.75rem;color:#999;margin-top:8px;">QR unavailable — use app buttons above</p>';
@@ -1464,25 +1602,70 @@
     qrBox.innerHTML = '';
     qrBox.appendChild(qrImg);
 
-    document.getElementById('upiModal').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    // Switch to Step 2
+    document.getElementById('coStep1').style.display     = 'none';
+    document.getElementById('coStep2').style.display     = 'block';
+    document.getElementById('step1Indicator').className  = 'co-step done';
+    document.getElementById('step1Num').textContent      = '✓';
+    document.getElementById('step2Indicator').className  = 'co-step active';
+    document.getElementById('stepLine').className        = 'co-step-line done';
+
+    document.querySelector('.upi-modal-box').scrollTop = 0;
   }
 
-  function closeUpiModal(e) {
-    if (e && e.target !== document.getElementById('upiModal')) return;
-    document.getElementById('upiModal').style.display = 'none';
-    document.body.style.overflow = '';
+  // ── Go back to Step 1 ──
+  function goBackToOrder() {
+    document.getElementById('coStep1').style.display     = 'block';
+    document.getElementById('coStep2').style.display     = 'none';
+    document.getElementById('step1Indicator').className  = 'co-step active';
+    document.getElementById('step1Num').textContent      = '1';
+    document.getElementById('step2Indicator').className  = 'co-step';
+    document.getElementById('stepLine').className        = 'co-step-line';
+    document.querySelector('.upi-modal-box').scrollTop   = 0;
   }
 
+  // ── Notify Nikhil via WhatsApp ──
+  function notifyNikhil() {
+    var name    = (document.getElementById('coName').value    || '').trim();
+    var phone   = (document.getElementById('coPhone').value   || '').trim();
+    var address = (document.getElementById('coAddress').value || '').trim();
+    var city    = (document.getElementById('coCity').value    || '').trim();
+    var pincode = (document.getElementById('coPincode').value || '').trim();
+    var grade   = document.getElementById('coGrade').value;
+    var notes   = (document.getElementById('coNotes').value   || '').trim();
+
+    var msg  = '🛒 *New Order — NP Naturals*\n\n';
+    msg += '👤 *Name:* ' + name + '\n';
+    msg += '📞 *Phone:* ' + phone + '\n\n';
+    msg += '📦 *Product:* ' + _coProduct + '\n';
+    msg += '⚖️ *Quantity:* ' + _coKg + ' kg\n';
+    msg += '🏅 *Grade:* ' + grade + '\n';
+    msg += '💰 *Total:* ₹' + _coTotal.toLocaleString('en-IN') + '\n\n';
+    msg += '📍 *Delivery Address:*\n' + address + ', ' + city + ' - ' + pincode + '\n';
+    if (notes) msg += '\n📝 *Notes:* ' + notes + '\n';
+    msg += '\n_Payment sent via UPI to 9322362932@ybl. Please confirm order._';
+
+    window.open('https://wa.me/918087362932?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  // ── UPI app tap — desktop hint ──
   function payWithApp(app, e) {
-    // On desktop, show helpful hint after a moment
     setTimeout(function() {
-      var ua = navigator.userAgent || '';
-      var isMobile = /Android|iPhone|iPad/i.test(ua);
+      var isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent || '');
       if (!isMobile) {
-        alert('UPI apps open on mobile only.\nOn desktop: scan the QR code with your phone\'s camera or UPI app to pay.');
+        alert('UPI apps only open on mobile.\nOn desktop: scan the QR code below with your phone camera to pay.');
       }
     }, 600);
+  }
+
+  // ── Close modal ──
+  function closeUpiModal(e) {
+    if (e && e.target !== document.getElementById('upiModal')) return;
+    closeModalFull();
+  }
+  function closeModalFull() {
+    document.getElementById('upiModal').style.display = 'none';
+    document.body.style.overflow = '';
   }
 </script>
 </body>
